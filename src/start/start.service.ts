@@ -21,7 +21,7 @@ export class StartService {
   async sendStartMessage(ctx: Context) {
     await sendMessage(startMessage(), {
       ctx,
-      reply_markup: startMarkup,
+      reply_markup: startMarkup(),
       type: 'send',
     });
   }

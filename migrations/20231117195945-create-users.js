@@ -23,9 +23,25 @@ module.exports = {
       userName: {
         type: Sequelize.STRING(100),
       },
-      timezone: {
-        type: Sequelize.STRING(5),
-        defaultValue: '+3',
+      pointsBalance: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      coinsBalance: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      boostsBalance: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      level: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      lastLogin: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       createdAt: {
         type: Sequelize.DATE,

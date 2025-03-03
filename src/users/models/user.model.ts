@@ -7,7 +7,6 @@ export interface UserCreationArgs {
   firstName: string;
   lastName: string;
   userName: string;
-  timezone?: string;
 }
 
 @Table({ tableName: 'Users' })
@@ -34,10 +33,33 @@ export class User extends AbstractModel<User, UserCreationArgs> {
   userName: string;
 
   @Column({
-    type: DataType.STRING,
-    defaultValue: '+3',
+    type: DataType.INTEGER,
+    defaultValue: 0,
   })
-  timezone: string;
+  pointsBalance: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  coinsBalance: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  boostsBalance: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  level: number;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  lastLogin: Date;
 
   @HasMany(() => UserRoles)
   roles: UserRoles[];
