@@ -39,10 +39,10 @@ export class User extends AbstractModel<User, UserCreationArgs> {
   totalTapsCount: number;
 
   @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
+    type: DataType.STRING,
+    defaultValue: '0',
   })
-  pointsBalance: number;
+  pointsBalance: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -58,7 +58,7 @@ export class User extends AbstractModel<User, UserCreationArgs> {
 
   @Column({
     type: DataType.INTEGER,
-    defaultValue: 0,
+    defaultValue: 1,
   })
   level: number;
 

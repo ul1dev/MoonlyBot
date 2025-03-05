@@ -1,4 +1,5 @@
 export const COINS_FOR_POINTS_PRICES = {
+  1: 100,
   10: 1000,
   100: 8000,
   1000: 80000,

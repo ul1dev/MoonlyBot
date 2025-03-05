@@ -30,6 +30,7 @@
     "@nestjs/schematics": "^11.0.2",
     "@nestjs/sequelize": "10.0.0",
     "archiver": "^7.0.1",
+    "bignumber.js": "^9.1.2",
     "cheerio": "^1.0.0",
     "chrono-node": "^2.7.8",
     "class-transformer": "^0.5.1",

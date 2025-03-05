@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { COINS_FOR_POINTS_PRICES } from './coins.config';
 import { StarsService } from '../stars/stars.service';
 import { UserRepository } from 'src/users/repositories/user.repository';
+import BigNumber from 'bignumber.js';
 
 @Injectable()
 export class CoinsService {
@@ -39,9 +40,13 @@ export class CoinsService {
       );
     }
 
+    const newPointsBalance = new BigNumber(user.pointsBalance).minus(
+      String(price),
+    );
+
     await this.userRepository.update(
       {
-        pointsBalance: user.pointsBalance - price,
+        pointsBalance: newPointsBalance.toString(),
         coinsBalance: user.coinsBalance + count,
       },
       {
@@ -50,7 +55,7 @@ export class CoinsService {
     );
 
     return {
-      pointsBalance: user.pointsBalance - price,
+      pointsBalance: newPointsBalance.toString(),
       coinsBalance: user.coinsBalance + count,
     };
   }

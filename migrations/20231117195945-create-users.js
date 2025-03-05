@@ -28,8 +28,8 @@ module.exports = {
         defaultValue: 0,
       },
       pointsBalance: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+        type: Sequelize.STRING(500),
+        defaultValue: '0',
       },
       coinsBalance: {
         type: Sequelize.INTEGER,
@@ -41,7 +41,7 @@ module.exports = {
       },
       level: {
         type: Sequelize.INTEGER,
-        defaultValue: 0,
+        defaultValue: 1,
       },
       lastLogin: {
         type: Sequelize.DATE,
