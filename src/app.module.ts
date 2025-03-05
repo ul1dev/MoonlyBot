@@ -16,6 +16,11 @@ import { PaginationModule } from './libs/pagination/pagination.module';
 import { FilesModule } from './files/files.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { BackupsModule } from './backups/backups.module';
+import { StarsModule } from './stars/stars.module';
+import { PointsModule } from './points/points.module';
+import { BoostsModule } from './boosts/boosts.module';
+import { CoinsModule } from './coins/coins.module';
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   imports: [
@@ -43,6 +48,11 @@ import { BackupsModule } from './backups/backups.module';
     MailingsModule,
     FilesModule,
     BackupsModule,
+    StarsModule,
+    PointsModule,
+    BoostsModule,
+    CoinsModule,
+    TransactionsModule,
 
     ListenersLowModule,
   ],

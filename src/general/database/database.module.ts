@@ -9,6 +9,7 @@ import { MailingQueueItem } from 'src/mailings/models/mailing-queue-item.model';
 import { MailingTemplate } from 'src/mailings/models/mailing-template.model';
 import { Mailing } from 'src/mailings/models/mailing.model';
 import { UserRoles } from 'src/roles/models/user-roles.model';
+import { Transaction } from 'src/transactions/models/transaction.model';
 import { User } from 'src/users/models/user.model';
 
 @Module({
@@ -24,6 +25,7 @@ import { User } from 'src/users/models/user.model';
       Mailing,
       MailingTemplate,
       MailingQueueItem,
+      Transaction,
     ]),
   ],
 })

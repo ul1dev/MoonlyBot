@@ -23,6 +23,10 @@ module.exports = {
       userName: {
         type: Sequelize.STRING(100),
       },
+      totalTapsCount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
       pointsBalance: {
         type: Sequelize.INTEGER,
         defaultValue: 0,

@@ -3,6 +3,7 @@ import { Context } from 'telegraf';
 import { getCtxData } from 'src/libs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserRolesRepository } from 'src/roles/repositories/user-roles.repository';
+import { InitUserDto } from './dto/init-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -58,5 +59,28 @@ export class UsersService {
     return user;
   }
 
-  // ПРОСИТЬ ГПТ ПООЧЕРЕДИ ПИСАТЬ КАЖДЫЙ МОДУЛЬ И ИСПРАВЛЯТЬ ЕГО!!!!!!!!!!!!!!
+  async initUser(userData: InitUserDto) {
+    const user = await this.userRepository.findOrCreate({
+      where: { telegramId: userData.telegramId },
+      defaults: {
+        ...userData,
+        userName: userData.username,
+      },
+    });
+
+    if (user) {
+      user.lastLogin = new Date();
+      await user.save();
+    }
+
+    return {
+      id: user.id,
+      ...userData,
+      pointsBalance: user.pointsBalance,
+      coinsBalance: user.coinsBalance,
+      boostsBalance: user.boostsBalance,
+      level: user.level,
+      lastLogin: user.lastLogin,
+    };
+  }
 }

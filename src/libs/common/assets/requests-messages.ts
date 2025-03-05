@@ -1,13 +1,13 @@
 export const requestMessages = {
-  isEmail: 'Некорректный email',
-  isPhone: 'Некорректный номер телефона',
-  isString: (title: string) => `Поле ${title} должно быть строкой`,
-  isNumber: (title: string) => `Поле ${title} олжно быть числом`,
-  isBoolean: (title: string) => `Поле ${title} болжно быть boolean`,
-  isNotEmpty: (title: string) => `Поле ${title} обязательно`,
-  maxLength: (title: string, len: number) =>
-    `Максимальная длинна поля ${title} ${len} символ(ов, a)`,
-  isEnum: (title: string, values: string[]) =>
-    `Поле ${title} может иметь значения ${values.join(', ')}`,
-  isArray: (title: string) => `Поле ${title} должно быть массивом`,
+  isNotEmpty: (field: string) =>
+    `Поле ${field} не должно быть пустым | Field ${field} should not be empty`,
+  isString: (field: string) =>
+    `Поле ${field} должно быть строкой | Field ${field} must be a string`,
+  isNumber: (field: string) =>
+    `Поле ${field} должно быть числом | Field ${field} must be a number`,
+  isEnum: (field: string, enumObject: object) =>
+    `Поле ${field} должно быть одним из: ${Object.values(enumObject).join(', ')} | ` +
+    `Field ${field} must be one of: ${Object.values(enumObject).join(', ')}`,
+  isPositive: (field: string) =>
+    `Поле ${field} должно быть положительным числом | Field ${field} must be a positive number`,
 };
