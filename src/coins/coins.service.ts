@@ -37,12 +37,12 @@ export class CoinsService {
       throw new HttpException(
         {
           error: {
-            code: HttpStatus.FORBIDDEN,
+            code: HttpStatus.BAD_REQUEST,
             enMessage: 'Not enough points',
             ruMessage: 'Недостаточно поинтов',
           },
         },
-        HttpStatus.FORBIDDEN,
+        HttpStatus.BAD_REQUEST,
       );
     }
 

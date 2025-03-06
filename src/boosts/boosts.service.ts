@@ -35,12 +35,12 @@ export class BoostsService {
       throw new HttpException(
         {
           error: {
-            code: HttpStatus.FORBIDDEN,
+            code: HttpStatus.BAD_REQUEST,
             enMessage: 'Not enough coins',
             ruMessage: 'Недостаточно коинов',
           },
         },
-        HttpStatus.FORBIDDEN,
+        HttpStatus.BAD_REQUEST,
       );
     }
 

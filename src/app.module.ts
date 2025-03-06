@@ -63,11 +63,10 @@ import { ReferralsModule } from './referrals/referrals.module';
     BoostsModule,
     CoinsModule,
     TransactionsModule,
+    ReferralsModule,
 
     // должно быть внизу из за приоритета выполнения
     ListenersLowModule,
-
-    ReferralsModule,
   ],
   providers: [
     {
