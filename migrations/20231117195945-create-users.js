@@ -24,16 +24,16 @@ module.exports = {
         type: Sequelize.STRING(100),
       },
       totalTapsCount: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+        type: Sequelize.STRING(500),
+        defaultValue: '0',
       },
       pointsBalance: {
         type: Sequelize.STRING(500),
         defaultValue: '0',
       },
       coinsBalance: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+        type: Sequelize.STRING(500),
+        defaultValue: '0',
       },
       boostsBalance: {
         type: Sequelize.INTEGER,
@@ -42,6 +42,10 @@ module.exports = {
       level: {
         type: Sequelize.INTEGER,
         defaultValue: 1,
+      },
+      invitedUsersCount: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       lastLogin: {
         type: Sequelize.DATE,

@@ -6,7 +6,7 @@ export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Get(':transactionId')
-  async addFarmed(@Param(':transactionId') id: string) {
+  async addFarmed(@Param('transactionId') id: string) {
     return this.transactionsService.getTransactionById(id);
   }
 }

@@ -21,6 +21,10 @@ import { PointsModule } from './points/points.module';
 import { BoostsModule } from './boosts/boosts.module';
 import { CoinsModule } from './coins/coins.module';
 import { TransactionsModule } from './transactions/transactions.module';
+import { APP_GUARD } from '@nestjs/core';
+import { CustomThrottlerGuard } from './general/guards';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ReferralsModule } from './referrals/referrals.module';
 
 @Module({
   imports: [
@@ -35,6 +39,12 @@ import { TransactionsModule } from './transactions/transactions.module';
       }),
       inject: [ConfigService],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 1000,
+        limit: 10,
+      },
+    ]),
     ScheduleModule.forRoot(),
     DatabaseModule,
     StartModule,
@@ -54,7 +64,16 @@ import { TransactionsModule } from './transactions/transactions.module';
     CoinsModule,
     TransactionsModule,
 
+    // должно быть внизу из за приоритета выполнения
     ListenersLowModule,
+
+    ReferralsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: CustomThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}

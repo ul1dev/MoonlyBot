@@ -8,7 +8,11 @@ export class StarsUpdate {
 
   @On('pre_checkout_query')
   async preCheckoutQuery(@Ctx() ctx: Context) {
-    await ctx.answerPreCheckoutQuery(true);
+    try {
+      await ctx.answerPreCheckoutQuery(true);
+    } catch (error) {
+      console.error('Error in pre_checkout_query:', error);
+    }
   }
 
   @On('successful_payment')

@@ -5,9 +5,10 @@ import { User } from './models/user.model';
 import { UserRepository } from './repositories/user.repository';
 import { RolesModule } from 'src/roles/roles.module';
 import { UsersController } from './users.controller';
+import { ReferralsModule } from 'src/referrals/referrals.module';
 
 @Module({
-  imports: [DatabaseModule.forFeature([User]), RolesModule],
+  imports: [DatabaseModule.forFeature([User]), RolesModule, ReferralsModule],
   providers: [UsersService, UserRepository],
   exports: [UserRepository, UsersService],
   controllers: [UsersController],

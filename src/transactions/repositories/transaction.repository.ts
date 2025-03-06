@@ -1,26 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { AbstractRepository } from 'src/libs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Transaction } from '../models/transaction.model';
+import {
+  Transaction,
+  TransactionCreationArgs,
+} from '../models/transaction.model';
 
 @Injectable()
-export class TransactionRepository {
+export class TransactionRepository extends AbstractRepository<
+  Transaction,
+  TransactionCreationArgs
+> {
+  protected readonly logger = new Logger(Transaction.name);
+
   constructor(
     @InjectModel(Transaction)
-    private transactionModel: typeof Transaction,
-  ) {}
-
-  async create(data: Partial<Transaction>) {
-    return this.transactionModel.create(data);
-  }
-
-  async findByPk(id: string) {
-    return this.transactionModel.findByPk(id);
-  }
-
-  async update(id: string, data: Partial<Transaction>) {
-    const [affectedCount] = await this.transactionModel.update(data, {
-      where: { id },
-    });
-    return affectedCount > 0;
+    private TransactionModel: typeof Transaction,
+  ) {
+    super(TransactionModel);
   }
 }

@@ -6,15 +6,19 @@ export class InitUserDto {
   @IsString({ message: requestMessages.isString('telegramId') })
   telegramId: string;
 
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('firstName') })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('firstName') })
-  firstName: string;
+  firstName?: string;
 
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('lastName') })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('lastName') })
-  lastName: string;
+  lastName?: string;
 
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('username') })
-  @IsString({ message: requestMessages.isString('username') })
-  username: string;
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('userName') })
+  userName?: string;
+
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('referralId') })
+  referralId?: string;
 }

@@ -7,7 +7,7 @@ export const COINS_FOR_POINTS_PRICES = {
 };
 
 export const COINS_FOR_STARS_PRICES = {
-  1: 20,
+  1: 1,
   10: 180,
   100: 1500,
   500: 7000,

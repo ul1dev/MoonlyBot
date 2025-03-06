@@ -15,7 +15,13 @@ export class PointsService {
 
     if (!user) return;
 
-    const userCurrentLevel = getUserLevelByTaps(user.totalTapsCount);
+    const newTapsCount = new BigNumber(user.totalTapsCount).plus(
+      String(tapsCount),
+    );
+
+    const userCurrentLevel = getUserLevelByTaps(newTapsCount);
+
+    const isNewLevel = user.level !== userCurrentLevel;
 
     let farmedPointsCount = 0;
 
@@ -30,17 +36,14 @@ export class PointsService {
     );
 
     user.pointsBalance = newPointsBalance.toString();
+    user.totalTapsCount = newTapsCount.toString();
     user.level = userCurrentLevel;
     await user.save();
 
-    const newUser = await this.userRepository.findByPk(data.userId);
-
     return {
-      pointsBalance: newUser.pointsBalance,
-      userLevel: userCurrentLevel,
-      isNewLevel: user.level !== userCurrentLevel,
+      pointsBalance: user.pointsBalance,
+      userLevel: user.level,
+      isNewLevel,
     };
   }
 }
-
-// СДЕЛАТЬ ГЛОБАЛЬНЫЕ ВАЛИДАЦИИ ЗАПРОСОВ И ШИФРОВАНИЕ (из deepseek)

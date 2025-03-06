@@ -4,9 +4,9 @@ import { UserRoles } from 'src/roles/models/user-roles.model';
 
 export interface UserCreationArgs {
   telegramId: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
+  firstName?: string;
+  lastName?: string;
+  userName?: string;
 }
 
 @Table({ tableName: 'Users' })
@@ -33,10 +33,10 @@ export class User extends AbstractModel<User, UserCreationArgs> {
   userName: string;
 
   @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
+    type: DataType.STRING,
+    defaultValue: '0',
   })
-  totalTapsCount: number;
+  totalTapsCount: string;
 
   @Column({
     type: DataType.STRING,
@@ -45,10 +45,10 @@ export class User extends AbstractModel<User, UserCreationArgs> {
   pointsBalance: string;
 
   @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
+    type: DataType.STRING,
+    defaultValue: '0',
   })
-  coinsBalance: number;
+  coinsBalance: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -61,6 +61,12 @@ export class User extends AbstractModel<User, UserCreationArgs> {
     defaultValue: 1,
   })
   level: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  invitedUsersCount: number;
 
   @Column({
     type: DataType.DATE,

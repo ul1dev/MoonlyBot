@@ -1,22 +1,27 @@
 import { LEVEL_BY_TAPS } from '../points.config';
+import BigNumber from 'bignumber.js';
 
-export const getUserLevelByTaps = (tapsCount: number) => {
+export const getUserLevelByTaps = (tapsCount: BigNumber) => {
   const thresholds = Object.keys(LEVEL_BY_TAPS)
-    .map(Number)
-    .sort((a, b) => a - b);
+    .map((key) => new BigNumber(key))
+    .sort((a, b) => a.comparedTo(b));
+
+  if (thresholds.length === 0) return 1;
+
   const lastThreshold = thresholds[thresholds.length - 1];
 
-  if (tapsCount >= lastThreshold) {
-    const baseLevel = LEVEL_BY_TAPS[lastThreshold];
-    const excess = tapsCount - lastThreshold;
-    const additionalLevels = Math.floor(excess / 200000);
-    return baseLevel + additionalLevels;
-  } else {
-    for (let i = thresholds.length - 1; i >= 0; i--) {
-      const threshold = thresholds[i];
-      if (tapsCount >= threshold) {
-        return LEVEL_BY_TAPS[threshold];
-      }
+  if (tapsCount.gte(lastThreshold)) {
+    const baseLevel = LEVEL_BY_TAPS[lastThreshold.toString()];
+    const excess = tapsCount.minus(lastThreshold);
+    const additionalLevels = excess
+      .dividedBy(200000)
+      .integerValue(BigNumber.ROUND_FLOOR);
+    return baseLevel + additionalLevels.toNumber();
+  }
+
+  for (let i = thresholds.length - 1; i >= 0; i--) {
+    if (tapsCount.gte(thresholds[i])) {
+      return LEVEL_BY_TAPS[thresholds[i].toString()];
     }
   }
 

@@ -3,12 +3,18 @@ import { COINS_FOR_POINTS_PRICES } from './coins.config';
 import { StarsService } from '../stars/stars.service';
 import { UserRepository } from 'src/users/repositories/user.repository';
 import BigNumber from 'bignumber.js';
+import { TransactionRepository } from 'src/transactions/repositories/transaction.repository';
+import {
+  TransactionCurrency,
+  TransactionStatus,
+} from 'src/transactions/models/transaction.model';
 
 @Injectable()
 export class CoinsService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly starsService: StarsService,
+    private readonly transactionRepository: TransactionRepository,
   ) {}
 
   async buyWithPoints(userId: string, count: number) {
@@ -43,20 +49,33 @@ export class CoinsService {
     const newPointsBalance = new BigNumber(user.pointsBalance).minus(
       String(price),
     );
+    const newCoinsBalance = new BigNumber(user.coinsBalance).plus(
+      String(count),
+    );
 
     await this.userRepository.update(
       {
         pointsBalance: newPointsBalance.toString(),
-        coinsBalance: user.coinsBalance + count,
+        coinsBalance: newCoinsBalance.toString(),
       },
       {
         where: { id: user.id },
       },
     );
 
+    const transaction = await this.transactionRepository.create({
+      userId: user.id,
+      status: TransactionStatus.PROCESSED,
+      currency: TransactionCurrency.POINTS,
+      count,
+      amount: price,
+      productTitle: 'Coins',
+    });
+
     return {
       pointsBalance: newPointsBalance.toString(),
-      coinsBalance: user.coinsBalance + count,
+      coinsBalance: newCoinsBalance.toString(),
+      transactionId: transaction.id,
     };
   }
 

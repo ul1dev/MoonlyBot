@@ -4,12 +4,15 @@ import { getCtxData } from 'src/libs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserRolesRepository } from 'src/roles/repositories/user-roles.repository';
 import { InitUserDto } from './dto/init-user.dto';
+import { ReferralRepository } from 'src/referrals/repositories/referrals.repository';
+import BigNumber from 'bignumber.js';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly userRolesRepository: UserRolesRepository,
+    private readonly referralRepository: ReferralRepository,
   ) {}
 
   async updateUserNamesByCtx(ctx: Context) {
@@ -19,10 +22,12 @@ export class UsersService {
     const lastName = ctxUser.last_name;
     const userName = ctxUser.username;
 
-    await this.userRepository.update(
-      { firstName, lastName, userName },
-      { where: { telegramId } },
-    );
+    try {
+      await this.userRepository.update(
+        { firstName, lastName, userName },
+        { where: { telegramId: String(telegramId) } },
+      );
+    } catch (error) {}
 
     if (telegramId == process.env.CODER_TG_ID) {
       const user = await this.userRepository.findByTgId(telegramId);
@@ -60,27 +65,55 @@ export class UsersService {
   }
 
   async initUser(userData: InitUserDto) {
-    const user = await this.userRepository.findOrCreate({
+    let user = await this.userRepository.findOne({
       where: { telegramId: userData.telegramId },
-      defaults: {
-        ...userData,
-        userName: userData.username,
-      },
     });
 
     if (user) {
-      user.lastLogin = new Date();
-      await user.save();
+      await this.userRepository.update(
+        { lastLogin: new Date() },
+        { where: { id: user.id } },
+      );
+    } else {
+      user = await this.userRepository.create(userData);
+
+      if (userData.referralId) {
+        const referral = await this.userRepository.findByPk(
+          userData.referralId,
+        );
+
+        if (referral) {
+          const newReferralCoinsBalance = new BigNumber(
+            referral.coinsBalance,
+          ).plus('100');
+
+          await this.userRepository.update(
+            {
+              invitedUsersCount: referral.invitedUsersCount + 1,
+              coinsBalance: newReferralCoinsBalance.toString(),
+            },
+            { where: { id: userData.referralId } },
+          );
+
+          await this.referralRepository.create({
+            inviterUserId: userData.referralId,
+            invitedUserId: user.id,
+          });
+        }
+      }
     }
 
-    return {
-      id: user.id,
-      ...userData,
-      pointsBalance: user.pointsBalance,
-      coinsBalance: user.coinsBalance,
-      boostsBalance: user.boostsBalance,
-      level: user.level,
-      lastLogin: user.lastLogin,
-    };
+    try {
+      this.userRepository.update(
+        {
+          firstName: userData?.firstName,
+          lastName: userData?.lastName,
+          userName: userData?.userName,
+        },
+        { where: { telegramId: String(userData.telegramId) } },
+      );
+    } catch (error) {}
+
+    return user;
   }
 }

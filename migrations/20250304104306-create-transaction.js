@@ -12,10 +12,6 @@ module.exports = {
       userId: {
         type: Sequelize.STRING(500),
         allowNull: false,
-        references: {
-          model: 'Users',
-          key: 'id',
-        },
       },
       status: {
         type: Sequelize.STRING(100),

@@ -1,13 +1,22 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { BOOSTS_PRICES } from './boosts.config';
 import { UserRepository } from 'src/users/repositories/user.repository';
+import BigNumber from 'bignumber.js';
+import { TransactionRepository } from 'src/transactions/repositories/transaction.repository';
+import {
+  TransactionCurrency,
+  TransactionStatus,
+} from 'src/transactions/models/transaction.model';
 
 @Injectable()
 export class BoostsService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly transactionRepository: TransactionRepository,
+  ) {}
 
   async buyBoosts(userId: string, count: number) {
-    const price = BOOSTS_PRICES[count];
+    const price: number = BOOSTS_PRICES[count];
     if (!price) {
       throw new HttpException(
         {
@@ -22,7 +31,7 @@ export class BoostsService {
     }
 
     const user = await this.userRepository.findByPk(userId);
-    if (user.coinsBalance < price) {
+    if (new BigNumber(user.coinsBalance).lt(new BigNumber(String(price)))) {
       throw new HttpException(
         {
           error: {
@@ -35,19 +44,34 @@ export class BoostsService {
       );
     }
 
+    const newCoinsBalance = new BigNumber(user.coinsBalance).minus(
+      String(price),
+    );
+    const newBoostsBalance = user.boostsBalance + count;
+
     await this.userRepository.update(
       {
-        coinsBalance: user.coinsBalance - price,
-        boostsBalance: user.boostsBalance + count,
+        coinsBalance: newCoinsBalance.toString(),
+        boostsBalance: newBoostsBalance,
       },
       {
         where: { id: user.id },
       },
     );
 
+    const transaction = await this.transactionRepository.create({
+      userId: user.id,
+      status: TransactionStatus.PROCESSED,
+      currency: TransactionCurrency.COINS,
+      count,
+      amount: price,
+      productTitle: 'Boosts',
+    });
+
     return {
-      boostsBalance: user.boostsBalance + count,
-      coinsBalance: user.coinsBalance - price,
+      boostsBalance: newBoostsBalance,
+      coinsBalance: newCoinsBalance.toString(),
+      transactionId: transaction.id,
     };
   }
 }

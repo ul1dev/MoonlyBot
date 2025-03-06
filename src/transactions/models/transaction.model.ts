@@ -6,6 +6,7 @@ import {
   ForeignKey,
 } from 'sequelize-typescript';
 import { User } from '../../users/models/user.model';
+import { AbstractModel } from 'src/libs/common';
 
 export enum TransactionStatus {
   PROCESSING = 'PROCESSING',
@@ -19,8 +20,20 @@ export enum TransactionCurrency {
   POINTS = 'POINTS',
 }
 
+export interface TransactionCreationArgs {
+  userId: string;
+  status: TransactionStatus;
+  currency: TransactionCurrency;
+  count: number;
+  amount: number;
+  productTitle: string;
+}
+
 @Table({ tableName: 'Transactions' })
-export class Transaction extends Model {
+export class Transaction extends AbstractModel<
+  Transaction,
+  TransactionCreationArgs
+> {
   @ForeignKey(() => User)
   @Column({
     type: DataType.STRING(500),
