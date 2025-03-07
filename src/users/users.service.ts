@@ -114,7 +114,9 @@ export class UsersService {
       );
     } catch (error) {}
 
-    return user;
+    // ВЫСЧИТЫВАТЬ СКОЛЬКО ТИП ЗАРАБОТАЛ ПОИНТОВ АФК И ВОЗВРАЩАТЬ ЭТО ЧИСЛО И СРАЗУ ПЛЮСОВАТЬ К БАЛАНСУ
+
+    return { user };
   }
 
   async getUserById(id: string) {
