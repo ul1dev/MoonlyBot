@@ -1,11 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { Context } from 'telegraf';
+import { Context, Telegraf } from 'telegraf';
 import { getCtxData } from 'src/libs/common';
 import { UserRepository } from './repositories/user.repository';
 import { UserRolesRepository } from 'src/roles/repositories/user-roles.repository';
 import { InitUserDto } from './dto/init-user.dto';
 import { ReferralRepository } from 'src/referrals/repositories/referrals.repository';
 import BigNumber from 'bignumber.js';
+import { InjectBot } from 'nestjs-telegraf';
+import { newRefarralMarkup, newRefarralMessage } from 'src/referrals/responses';
+import { sendMessage } from 'src/general';
 
 @Injectable()
 export class UsersService {
@@ -13,6 +16,7 @@ export class UsersService {
     private readonly userRepository: UserRepository,
     private readonly userRolesRepository: UserRolesRepository,
     private readonly referralRepository: ReferralRepository,
+    @InjectBot() private readonly bot: Telegraf<Context>,
   ) {}
 
   async updateUserNamesByCtx(ctx: Context) {
@@ -70,7 +74,7 @@ export class UsersService {
     });
 
     if (user) {
-      await this.userRepository.update(
+      this.userRepository.update(
         { lastLogin: new Date() },
         { where: { id: user.id } },
       );
@@ -87,7 +91,7 @@ export class UsersService {
             referral.coinsBalance,
           ).plus('100');
 
-          await this.userRepository.update(
+          this.userRepository.update(
             {
               invitedUsersCount: referral.invitedUsersCount + 1,
               coinsBalance: newReferralCoinsBalance.toString(),
@@ -95,10 +99,20 @@ export class UsersService {
             { where: { id: userData.referralId } },
           );
 
-          await this.referralRepository.create({
+          this.referralRepository.create({
             inviterUserId: userData.referralId,
             invitedUserId: user.id,
           });
+
+          try {
+            sendMessage(newRefarralMessage(user.userName), {
+              bot: this.bot,
+              isBanner: false,
+              type: 'send',
+              chatId: referral.telegramId,
+              reply_markup: newRefarralMarkup(),
+            });
+          } catch (error) {}
         }
       }
     }

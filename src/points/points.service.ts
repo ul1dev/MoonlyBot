@@ -23,13 +23,7 @@ export class PointsService {
 
     const isNewLevel = user.level !== userCurrentLevel;
 
-    let farmedPointsCount = 0;
-
-    if (user.level > 20) {
-      farmedPointsCount = tapsCount * 20;
-    } else {
-      farmedPointsCount = tapsCount * user.level;
-    }
+    const farmedPointsCount = tapsCount * user.level;
 
     const newPointsBalance = new BigNumber(user.pointsBalance).plus(
       String(farmedPointsCount),
