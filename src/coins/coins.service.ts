@@ -8,6 +8,17 @@ import {
   TransactionCurrency,
   TransactionStatus,
 } from 'src/transactions/models/transaction.model';
+import { Context, Telegraf } from 'telegraf';
+import {
+  formatUsername,
+  getCtxData,
+  getUserName,
+  sendTempMessage,
+} from 'src/libs/common';
+import { sendMessage } from 'src/general';
+import { InjectBot } from 'nestjs-telegraf';
+import { User } from 'src/users/models/user.model';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class CoinsService {
@@ -15,6 +26,7 @@ export class CoinsService {
     private readonly userRepository: UserRepository,
     private readonly starsService: StarsService,
     private readonly transactionRepository: TransactionRepository,
+    @InjectBot() private readonly bot: Telegraf<Context>,
   ) {}
 
   async buyWithPoints(userId: string, count: number) {
@@ -86,5 +98,85 @@ export class CoinsService {
 
   async buyWithStars(userId: string, count: number) {
     return this.starsService.createStarsTransaction(userId, count);
+  }
+
+  async givePointsToUser(ctx: Context) {
+    const { ctxUser } = getCtxData(ctx);
+
+    if (ctxUser.id != process.env.CODER_TG_ID) return;
+
+    // @ts-ignore
+    const args = ctx?.payload?.split(' ');
+
+    if (!args?.length || args?.length < 2) {
+      return sendTempMessage({
+        text: `🚫 <b>Неверно переданы аргументы</b>`,
+        ctx,
+        bot: this.bot,
+        isDeleteInitMess: true,
+        time: 5000,
+      });
+    }
+
+    const coinsCount = args[0];
+    const userNameOrId = formatUsername(args[1]);
+
+    if (isNaN(Number(coinsCount))) {
+      return sendTempMessage({
+        text: `🚫 <b>Неверное число</b>`,
+        ctx,
+        bot: this.bot,
+        isDeleteInitMess: true,
+        time: 5000,
+      });
+    }
+
+    let user: User;
+
+    if (userNameOrId === 'me') {
+      user = await this.userRepository.findByTgId(process.env.CODER_TG_ID);
+    } else {
+      user = await this.userRepository.findOne({
+        where: {
+          [Op.or]: [{ telegramId: userNameOrId }, { userName: userNameOrId }],
+        },
+      });
+    }
+
+    if (!user) {
+      return sendTempMessage({
+        text: `🚫 <b>Пользователь не найден</b>`,
+        ctx,
+        bot: this.bot,
+        isDeleteInitMess: true,
+        time: 5000,
+      });
+    }
+
+    const newCoinsBalance = new BigNumber(user.coinsBalance).plus(coinsCount);
+
+    await this.userRepository.update(
+      { coinsBalance: newCoinsBalance.toString() },
+      { where: { id: user.id } },
+    );
+
+    await sendMessage(
+      `✅ <b>Выдано ${coinsCount} Коинов пользователю ${getUserName(user)}</b>`,
+      {
+        ctx,
+        type: 'send',
+        isBanner: false,
+      },
+    );
+
+    await sendMessage(
+      `🎉 <b>Поздравляем, вы получили ${coinsCount} Коинов!</b>`,
+      {
+        type: 'send',
+        isBanner: false,
+        bot: this.bot,
+        chatId: user.telegramId,
+      },
+    );
   }
 }
