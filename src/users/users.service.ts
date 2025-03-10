@@ -9,6 +9,7 @@ import BigNumber from 'bignumber.js';
 import { InjectBot } from 'nestjs-telegraf';
 import { newRefarralMarkup, newRefarralMessage } from 'src/referrals/responses';
 import { sendMessage } from 'src/general';
+import { getAfkPointsCount } from 'src/points/assets/getAfkPointsCount';
 
 @Injectable()
 export class UsersService {
@@ -128,9 +129,16 @@ export class UsersService {
       );
     } catch (error) {}
 
-    // ВЫСЧИТЫВАТЬ СКОЛЬКО ТИП ЗАРАБОТАЛ ПОИНТОВ АФК И ВОЗВРАЩАТЬ ЭТО ЧИСЛО И СРАЗУ ПЛЮСОВАТЬ К БАЛАНСУ
+    const afkPointsCount = getAfkPointsCount(user?.lastLogin);
 
-    return { user };
+    if (afkPointsCount > 0) {
+      user.pointsBalance = new BigNumber(user.pointsBalance)
+        .plus(String(afkPointsCount))
+        .toString();
+      await user.save();
+    }
+
+    return { user, afkPointsCount };
   }
 
   async getUserById(id: string) {
