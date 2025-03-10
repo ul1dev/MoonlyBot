@@ -129,7 +129,10 @@ export class UsersService {
       );
     } catch (error) {}
 
-    const afkPointsCount = getAfkPointsCount(user?.lastLogin);
+    const afkPointsCount = getAfkPointsCount(
+      user?.lastLogin,
+      user?.boostsBalance,
+    );
 
     if (afkPointsCount > 0) {
       user.pointsBalance = new BigNumber(user.pointsBalance)

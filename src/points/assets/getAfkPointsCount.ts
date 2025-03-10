@@ -1,4 +1,7 @@
-export const getAfkPointsCount = (lastLogin: Date) => {
+export const getAfkPointsCount = (
+  lastLogin: Date,
+  boostsBalance: number = 0,
+) => {
   const currentDate = new Date();
   const differenceMs = currentDate.getTime() - lastLogin.getTime();
   const differenceMinutes = differenceMs / (1000 * 60);
@@ -11,5 +14,5 @@ export const getAfkPointsCount = (lastLogin: Date) => {
 
   const cappedIntervals = Math.min(intervals, 8);
 
-  return cappedIntervals * 50;
+  return cappedIntervals * 50 * boostsBalance;
 };
