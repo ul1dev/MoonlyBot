@@ -38,6 +38,11 @@ export class StarsService {
       );
     }
 
+    this.userRepository.update(
+      { lastLogin: new Date() },
+      { where: { id: userId } },
+    );
+
     const transaction = await this.transactionRepository.create({
       userId,
       status: TransactionStatus.PROCESSING,
@@ -82,6 +87,7 @@ export class StarsService {
     await this.userRepository.update(
       {
         coinsBalance: newCoinsBalance.toString(),
+        lastLogin: new Date(),
       },
       { where: { id: user.id } },
     );

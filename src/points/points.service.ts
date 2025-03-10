@@ -32,6 +32,7 @@ export class PointsService {
     user.pointsBalance = newPointsBalance.toString();
     user.totalTapsCount = newTapsCount.toString();
     user.level = userCurrentLevel;
+    user.lastLogin = new Date();
     await user.save();
 
     return {

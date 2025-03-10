@@ -32,6 +32,11 @@ export class CoinsService {
       );
     }
 
+    this.userRepository.update(
+      { lastLogin: new Date() },
+      { where: { id: userId } },
+    );
+
     const user = await this.userRepository.findByPk(userId);
     if (user.pointsBalance < price) {
       throw new HttpException(

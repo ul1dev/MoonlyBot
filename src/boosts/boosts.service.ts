@@ -30,6 +30,11 @@ export class BoostsService {
       );
     }
 
+    this.userRepository.update(
+      { lastLogin: new Date() },
+      { where: { id: userId } },
+    );
+
     const user = await this.userRepository.findByPk(userId);
     if (new BigNumber(user.coinsBalance).lt(new BigNumber(String(price)))) {
       throw new HttpException(
