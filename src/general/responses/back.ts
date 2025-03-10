@@ -1,22 +1,9 @@
-export const backInlineBtn = [{ text: '🏠 В меню', callback_data: 'back' }];
-
-export const backMarkup = {
-  inline_keyboard: [backInlineBtn],
-};
 export const cancelBackInlineBtn = [
   { text: '❌ Отменить', callback_data: 'back' },
 ];
 
 export const cancelBackMarkup = {
   inline_keyboard: [cancelBackInlineBtn],
-};
-
-export const sendBackInlineBtn = [
-  { text: '🏠 В меню', callback_data: 'send_back' },
-];
-
-export const sendBackMarkup = {
-  inline_keyboard: [sendBackInlineBtn],
 };
 
 export const localBackInlineBtn = (callback_data: string) => [
@@ -28,7 +15,7 @@ export const cancelInlineBtn = (callback_data: string) => [
 ];
 
 export const backBarInlineBtns = (callback_data: string) => [
-  [...localBackInlineBtn(callback_data), ...backInlineBtn],
+  [...localBackInlineBtn(callback_data)],
 ];
 
 export const backBarMarkup = (callback_data: string) => ({

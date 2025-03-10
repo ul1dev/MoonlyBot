@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { backMarkup, sendMessage } from 'src/general';
+import { sendMessage } from 'src/general';
 import { Context, Telegraf } from 'telegraf';
 import {
   createGlobalMailingTemplateMarkup,
@@ -491,7 +491,6 @@ export class MailingsService {
       bot: this.bot,
       chatId: message.chat?.id,
       messageId: message.message_id,
-      reply_markup: backMarkup,
     });
 
     await this.sendQueueMailingItems();

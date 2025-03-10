@@ -4,7 +4,7 @@ import { GeneralValidations } from 'src/general/general.validations';
 import { Context, Telegraf } from 'telegraf';
 import { getCtxData, getNowUTCDate, sendTempMessage } from 'src/libs/common';
 import { UserRepository } from 'src/users/repositories/user.repository';
-import { backMarkup, sendMessage } from 'src/general';
+import { sendMessage } from 'src/general';
 import { InjectBot } from 'nestjs-telegraf';
 import { InlineKeyboardMarkup } from 'telegraf/typings/core/types/typegram';
 import { MailingRepository } from 'src/mailings/repositories/mailing.repository';
@@ -83,7 +83,7 @@ export class ListenersService {
         bot: this.bot,
         chatId,
         messageId: +messageId,
-        reply_markup: finishMessage.markup ?? backMarkup,
+        reply_markup: finishMessage.markup,
       });
     }
 
@@ -134,7 +134,7 @@ export class ListenersService {
         bot: this.bot,
         chatId,
         messageId: +messageId,
-        reply_markup: finishMessage.markup ?? backMarkup,
+        reply_markup: finishMessage.markup,
       });
     }
   }
