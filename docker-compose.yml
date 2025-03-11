@@ -1,27 +1,27 @@
 version: '3'
 
 services:
-  # app:
-  #   build: ./
+  app:
+    build: ./
 
-  #   container_name: 'tasktamer'
-  #   image: tasktamer
+    container_name: 'coinappback'
+    image: ulidev/coinappback
 
-  #   restart: always
+    restart: always
 
-  #   links:
-  #     - database:database
+    links:
+      - database:database
 
-  #   environment:
-  #     - MYSQL_HOST=database
-  #     - MYSQL_PORT=3306
-  #     - NODE_ENV=production
+    environment:
+      - MYSQL_HOST=database
+      - MYSQL_PORT=3306
+      - NODE_ENV=production
 
-  #   depends_on:
-  #     - database
+    depends_on:
+      - database
 
-  #   networks:
-  #     - app-network
+    # networks:
+    #   - app-network
 
   database:
     container_name: 'database'
@@ -50,6 +50,5 @@ services:
 
 volumes:
   database:
-
 # networks:
 #   app-network:
