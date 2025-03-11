@@ -39,12 +39,12 @@ async function bootstrap() {
   await app.listen(PORT, () => {
     console.log(`Server started on port: ${PORT}`);
     console.log(`Environment: ${isProduction ? 'production' : 'development'}`);
-    console.log(
-      'Allowed origins:',
-      isProduction
-        ? '*.moonlycoin.com'
-        : '*.trycloudflare.com, localhost, 127.0.0.1',
-    );
+    // console.log(
+    //   'Allowed origins:',
+    //   isProduction
+    //     ? '*.moonlycoin.com'
+    //     : '*.trycloudflare.com, localhost, 127.0.0.1',
+    // );
   });
 }
 
