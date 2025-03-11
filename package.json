@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@nestjs/cache-manager": "^3.0.0",
     "@nestjs/cli": "^11.0.5",
     "@nestjs/common": "10.4.15",
     "@nestjs/config": "^4.0.0",
@@ -32,6 +33,7 @@
     "@nestjs/throttler": "^6.4.0",
     "archiver": "^7.0.1",
     "bignumber.js": "^9.1.2",
+    "cache-manager": "^6.4.1",
     "cheerio": "^1.0.0",
     "chrono-node": "^2.7.8",
     "class-transformer": "^0.5.1",

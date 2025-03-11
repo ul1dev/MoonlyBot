@@ -25,6 +25,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { CustomThrottlerGuard } from './general/guards';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ReferralsModule } from './referrals/referrals.module';
+import { CryptoModule } from './crypto/crypto.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { CustomCacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -45,6 +48,10 @@ import { ReferralsModule } from './referrals/referrals.module';
         limit: 10,
       },
     ]),
+    CacheModule.register({
+      ttl: 70 * 1000,
+      max: 1000,
+    }),
     ScheduleModule.forRoot(),
     DatabaseModule,
     StartModule,
@@ -64,6 +71,8 @@ import { ReferralsModule } from './referrals/referrals.module';
     CoinsModule,
     TransactionsModule,
     ReferralsModule,
+    CryptoModule,
+    CustomCacheModule,
 
     // должно быть внизу из за приоритета выполнения
     ListenersLowModule,
