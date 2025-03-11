@@ -20,15 +20,17 @@ async function bootstrap() {
   // 2. Подключаем middleware ДО CORS
   app.use(new DomainRestrictionMiddleware().use);
 
+  // isProduction
+  //   ? [/https?:\/\/(.*\.)?moonlycoin\.com$/]
+  //   : [
+  //       /https?:\/\/(.*\.)?trycloudflare\.com$/,
+  //       /https?:\/\/localhost(:\d+)?$/,
+  //       /https?:\/\/127\.0\.0\.1(:\d+)?$/,
+  //     ];
+
   // 3. Настройка CORS
   app.enableCors({
-    origin: isProduction
-      ? [/https?:\/\/(.*\.)?moonlycoin\.com$/]
-      : [
-          /https?:\/\/(.*\.)?trycloudflare\.com$/,
-          /https?:\/\/localhost(:\d+)?$/,
-          /https?:\/\/127\.0\.0\.1(:\d+)?$/,
-        ],
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type,Authorization,X-Requested-With',
