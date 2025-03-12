@@ -10,6 +10,7 @@ import { InjectBot } from 'nestjs-telegraf';
 import { newRefarralMarkup, newRefarralMessage } from 'src/referrals/responses';
 import { sendMessage } from 'src/general';
 import { getAfkPointsCount } from 'src/points/assets/getAfkPointsCount';
+import { getCurrentEnergy } from 'src/points/assets/getCurrentEnergy';
 
 @Injectable()
 export class UsersService {
@@ -74,12 +75,7 @@ export class UsersService {
       where: { telegramId: userData.telegramId },
     });
 
-    if (user) {
-      this.userRepository.update(
-        { lastLogin: new Date() },
-        { where: { id: user.id } },
-      );
-    } else {
+    if (!user) {
       user = await this.userRepository.create(userData);
 
       if (userData.referralId) {
@@ -116,7 +112,14 @@ export class UsersService {
           } catch (error) {}
         }
       }
+
+      return { user, afkPointsCount: 0 };
     }
+
+    this.userRepository.update(
+      { lastLogin: new Date() },
+      { where: { id: user.id } },
+    );
 
     try {
       this.userRepository.update(
@@ -141,6 +144,12 @@ export class UsersService {
         await user.save();
       }
     }
+
+    const updatedEnergy = getCurrentEnergy(user.lastEnergyUpdate, user.energy);
+
+    user.energy = updatedEnergy;
+    user.lastEnergyUpdate = new Date();
+    await user.save();
 
     return { user, afkPointsCount };
   }

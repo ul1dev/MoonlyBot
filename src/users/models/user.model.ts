@@ -69,6 +69,17 @@ export class User extends AbstractModel<User, UserCreationArgs> {
   invitedUsersCount: number;
 
   @Column({
+    type: DataType.INTEGER,
+    defaultValue: 10000,
+  })
+  energy: number;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  lastEnergyUpdate: Date;
+
+  @Column({
     type: DataType.DATE,
   })
   lastLogin: Date;

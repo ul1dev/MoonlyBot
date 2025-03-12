@@ -47,6 +47,14 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
+      energy: {
+        type: Sequelize.INTEGER,
+        defaultValue: 10000,
+      },
+      lastEnergyUpdate: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
       lastLogin: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
