@@ -28,4 +28,8 @@ export class UserRepository extends AbstractRepository<User, UserCreationArgs> {
 
     return document as User;
   }
+
+  async count(options?: FindOptions<User>): Promise<number> {
+    return this.userModel.count(options);
+  }
 }

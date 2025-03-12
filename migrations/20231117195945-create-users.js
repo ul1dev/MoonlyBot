@@ -23,6 +23,12 @@ module.exports = {
       userName: {
         type: Sequelize.STRING(100),
       },
+      ip: {
+        type: Sequelize.STRING(100),
+      },
+      userAgent: {
+        type: Sequelize.STRING(500),
+      },
       totalTapsCount: {
         type: Sequelize.STRING(500),
         defaultValue: '0',

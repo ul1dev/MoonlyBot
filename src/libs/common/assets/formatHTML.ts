@@ -7,5 +7,6 @@ export const formatHTML = (htmlText: string) => {
     .load(htmlText)
     ?.html()
     ?.replaceAll('<html><head></head><body>', '')
-    ?.replaceAll('</body></html>', '');
+    ?.replaceAll('</body></html>', '')
+    ?.replaceAll('&nbsp;', ' ');
 };

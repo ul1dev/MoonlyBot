@@ -59,7 +59,8 @@
     "stream-buffers": "^3.0.3",
     "telegraf": "^4.16.3",
     "telegraf-session-local": "^2.1.1",
-    "tz-lookup": "^6.1.25"
+    "tz-lookup": "^6.1.25",
+    "ua-parser-js": "^2.0.2"
   },
   "devDependencies": {
     "@nestjs/testing": "10.4.15",

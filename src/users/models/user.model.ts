@@ -7,6 +7,8 @@ export interface UserCreationArgs {
   firstName?: string;
   lastName?: string;
   userName?: string;
+  ip?: string;
+  userAgent?: string;
 }
 
 @Table({ tableName: 'Users' })
@@ -31,6 +33,16 @@ export class User extends AbstractModel<User, UserCreationArgs> {
     type: DataType.STRING,
   })
   userName: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  ip: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  userAgent: string;
 
   @Column({
     type: DataType.STRING,

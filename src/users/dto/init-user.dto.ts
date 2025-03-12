@@ -19,6 +19,14 @@ export class InitUserDto {
   userName?: string;
 
   @IsOptional()
+  @IsString({ message: requestMessages.isString('ip') })
+  ip?: string;
+
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('userAgent') })
+  userAgent?: string;
+
+  @IsOptional()
   @IsString({ message: requestMessages.isString('referralId') })
   referralId?: string;
 }

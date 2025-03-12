@@ -122,14 +122,16 @@ export class UsersService {
     );
 
     try {
-      this.userRepository.update(
-        {
-          firstName: userData?.firstName,
-          lastName: userData?.lastName,
-          userName: userData?.userName,
-        },
-        { where: { telegramId: String(userData.telegramId) } },
-      );
+      user.firstName = userData?.firstName;
+      user.lastName = userData?.lastName;
+      user.userName = userData?.userName;
+
+      if (userData.ip) {
+        user.ip = userData.ip;
+      }
+      if (userData.userAgent) {
+        user.userAgent = userData.userAgent;
+      }
     } catch (error) {}
 
     let afkPointsCount = 0;
@@ -141,7 +143,6 @@ export class UsersService {
         user.pointsBalance = new BigNumber(user.pointsBalance)
           .plus(String(afkPointsCount))
           .toString();
-        await user.save();
       }
     }
 
@@ -149,6 +150,8 @@ export class UsersService {
 
     user.energy = updatedEnergy;
     user.lastEnergyUpdate = new Date();
+
+    // глобально на всю функцию
     await user.save();
 
     return { user, afkPointsCount };

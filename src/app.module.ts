@@ -28,6 +28,7 @@ import { ReferralsModule } from './referrals/referrals.module';
 import { CryptoModule } from './crypto/crypto.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CustomCacheModule } from './cache/cache.module';
+import { AdminsModule } from './admins/admins.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { CustomCacheModule } from './cache/cache.module';
     ReferralsModule,
     CryptoModule,
     CustomCacheModule,
+    AdminsModule,
 
     // должно быть внизу из за приоритета выполнения
     ListenersLowModule,
