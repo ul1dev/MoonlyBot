@@ -84,6 +84,9 @@ export class UsersService {
         );
 
         if (referral) {
+          user.coinsBalance = '30';
+          await user.save();
+
           const newReferralCoinsBalance = new BigNumber(
             referral.coinsBalance,
           ).plus('100');
