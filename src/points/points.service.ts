@@ -18,7 +18,11 @@ export class PointsService {
 
     let tapsCount = dirtyTapsCount;
 
-    const updatedEnergy = getCurrentEnergy(user.lastEnergyUpdate, user.energy);
+    const updatedEnergy = getCurrentEnergy(
+      user.lastEnergyUpdate,
+      user.energy,
+      user.maxEnergy,
+    );
 
     if (tapsCount > updatedEnergy) {
       tapsCount = updatedEnergy;

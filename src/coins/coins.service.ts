@@ -97,7 +97,7 @@ export class CoinsService {
   }
 
   async buyWithStars(userId: string, count: number) {
-    return this.starsService.createStarsTransaction(userId, count);
+    return this.starsService.createCoinsTransaction(userId, count);
   }
 
   async givePointsToUser(ctx: Context) {

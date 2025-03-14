@@ -82,9 +82,15 @@ export class User extends AbstractModel<User, UserCreationArgs> {
 
   @Column({
     type: DataType.INTEGER,
-    defaultValue: 10000,
+    defaultValue: 1000,
   })
   energy: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    defaultValue: 1000,
+  })
+  maxEnergy: number;
 
   @Column({
     type: DataType.DATE,

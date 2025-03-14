@@ -13,6 +13,7 @@ import {
   Message,
   SuccessfulPayment,
 } from 'telegraf/typings/core/types/typegram';
+import { ENERGY_FOR_STARS_PRICES } from 'src/energy/energy.config';
 
 @Injectable()
 export class StarsService {
@@ -22,7 +23,7 @@ export class StarsService {
     @InjectBot() private readonly bot: Telegraf<Context>,
   ) {}
 
-  async createStarsTransaction(userId: string, count: number) {
+  async createCoinsTransaction(userId: string, count: number) {
     const price = COINS_FOR_STARS_PRICES[count];
 
     if (!price) {
@@ -64,6 +65,48 @@ export class StarsService {
     return { invoiceLink, transactionId: transaction.id };
   }
 
+  async createEnergyTransaction(userId: string, count: number) {
+    const price = ENERGY_FOR_STARS_PRICES[count];
+
+    if (!price) {
+      throw new HttpException(
+        {
+          error: {
+            code: HttpStatus.BAD_REQUEST,
+            enMessage: 'Invalid stars count',
+            ruMessage: 'Неверное количество звезд',
+          },
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    this.userRepository.update(
+      { lastLogin: new Date() },
+      { where: { id: userId } },
+    );
+
+    const transaction = await this.transactionRepository.create({
+      userId,
+      status: TransactionStatus.PROCESSING,
+      currency: TransactionCurrency.XTR,
+      count,
+      amount: price,
+      productTitle: 'Energy',
+    });
+
+    const invoiceLink = await this.bot.telegram.createInvoiceLink({
+      title: `Purchase ${count} energy`,
+      description: 'Energy purchase using Telegram Stars',
+      payload: transaction.id,
+      provider_token: process.env.PAYMENT_PROVIDER_TOKEN,
+      currency: 'XTR',
+      prices: [{ label: 'Energy', amount: price }],
+    });
+
+    return { invoiceLink, transactionId: transaction.id };
+  }
+
   async onSuccessfulPayment(ctx: Context) {
     const message = ctx.message as Message.SuccessfulPaymentMessage;
     const successfulPayment = message?.successful_payment as SuccessfulPayment;
@@ -80,16 +123,29 @@ export class StarsService {
 
     const user = await this.userRepository.findByPk(transaction.userId);
 
-    const newCoinsBalance = new BigNumber(user.coinsBalance).plus(
-      String(transaction.count),
-    );
+    if (transaction.productTitle === 'Coins') {
+      const newCoinsBalance = new BigNumber(user.coinsBalance).plus(
+        String(transaction.count),
+      );
 
-    await this.userRepository.update(
-      {
-        coinsBalance: newCoinsBalance.toString(),
-        lastLogin: new Date(),
-      },
-      { where: { id: user.id } },
-    );
+      await this.userRepository.update(
+        {
+          coinsBalance: newCoinsBalance.toString(),
+          lastLogin: new Date(),
+        },
+        { where: { id: user.id } },
+      );
+    }
+
+    if (transaction.productTitle === 'Energy') {
+      await this.userRepository.update(
+        {
+          maxEnergy: user.maxEnergy + transaction.count,
+          energy: user.maxEnergy + transaction.count,
+          lastLogin: new Date(),
+        },
+        { where: { id: user.id } },
+      );
+    }
   }
 }

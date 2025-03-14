@@ -149,10 +149,16 @@ export class UsersService {
       }
     }
 
-    const updatedEnergy = getCurrentEnergy(user.lastEnergyUpdate, user.energy);
+    const updatedEnergy = getCurrentEnergy(
+      user.lastEnergyUpdate,
+      user.energy,
+      user.maxEnergy,
+    );
 
-    user.energy = updatedEnergy;
-    user.lastEnergyUpdate = new Date();
+    if (user.energy !== updatedEnergy) {
+      user.energy = updatedEnergy;
+      user.lastEnergyUpdate = new Date();
+    }
 
     // глобально на всю функцию
     await user.save();

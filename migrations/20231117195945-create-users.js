@@ -55,7 +55,11 @@ module.exports = {
       },
       energy: {
         type: Sequelize.INTEGER,
-        defaultValue: 10000,
+        defaultValue: 1000,
+      },
+      maxEnergy: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1000,
       },
       lastEnergyUpdate: {
         type: Sequelize.DATE,

@@ -29,6 +29,7 @@ import { CryptoModule } from './crypto/crypto.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { CustomCacheModule } from './cache/cache.module';
 import { AdminsModule } from './admins/admins.module';
+import { EnergyModule } from './energy/energy.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { AdminsModule } from './admins/admins.module';
     CryptoModule,
     CustomCacheModule,
     AdminsModule,
+    EnergyModule,
 
     // должно быть внизу из за приоритета выполнения
     ListenersLowModule,
