@@ -11,9 +11,29 @@ export class AdminsUpdate {
   ) {}
 
   @Command('getStat')
-  async startCommand(@Ctx() ctx: Context) {
+  async getStatCommand(@Ctx() ctx: Context) {
     this.middlewares.commandMiddleware(ctx, (ctx: Context) =>
       this.adminsService.sendStatistic(ctx),
+    );
+  }
+
+  @Command('getTopUsersByTaps')
+  async getTopUsersByTapsCommand(@Ctx() ctx: Context) {
+    this.middlewares.commandMiddleware(ctx, (ctx: Context) =>
+      this.adminsService.getTopUsers(ctx, {
+        paramName: 'totalTapsCount',
+        messTitle: 'тапам',
+      }),
+    );
+  }
+
+  @Command('getTopUsersByInvites')
+  async getTopUsersByInvitesCommand(@Ctx() ctx: Context) {
+    this.middlewares.commandMiddleware(ctx, (ctx: Context) =>
+      this.adminsService.getTopUsers(ctx, {
+        paramName: 'invitedUsersCount',
+        messTitle: 'приглашениям',
+      }),
     );
   }
 }

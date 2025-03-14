@@ -6,7 +6,8 @@ import * as Sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { UAParser } from 'ua-parser-js';
 import { sendMessage } from 'src/general';
-import { statsMessage } from './responses';
+import { statsMessage, topUsersMessage } from './responses';
+import { User } from 'src/users/models/user.model';
 
 interface AvgStats {
   avgTaps: number;
@@ -153,6 +154,47 @@ export class AdminsService {
     }
   }
 
+  async getTopUsers(
+    ctx: Context,
+    { paramName, messTitle }: { paramName: string; messTitle: string },
+  ) {
+    const { ctxUser } = getCtxData(ctx);
+    if (ctxUser.id != process.env.CODER_TG_ID) return;
+
+    const topUsers = await this.getTopUsersByParam(paramName);
+
+    const formatedTopUsers = topUsers.map((user) => {
+      const { os, device } = this.parseDeviceInfo(user.userAgent || '');
+
+      return {
+        userName: user.userName,
+        firstName: user.firstName,
+        tapsCount: this.formatNumber(user.totalTapsCount),
+        pointsBalance: this.formatNumber(user.pointsBalance),
+        coinsBalance: this.formatNumber(user.coinsBalance),
+        boostsBalance: this.formatNumber(user.boostsBalance),
+        level: this.formatNumber(user.level),
+        invitedUsersCount: this.formatNumber(user.invitedUsersCount),
+        registrationDate: user.createdAt,
+        os: os || 'Неизвестно',
+        device: device || 'Неизвестно',
+      };
+    });
+
+    sendMessage(topUsersMessage(formatedTopUsers, messTitle), {
+      ctx,
+      isBanner: false,
+      type: 'send',
+    });
+  }
+
+  private async getTopUsersByParam(param: string, limit = 3): Promise<User[]> {
+    return this.userRepository.findAll({
+      order: [[Sequelize.cast(Sequelize.col(param), 'INTEGER'), 'DESC']],
+      limit,
+    });
+  }
+
   private getStartOfPeriod(period: 'day' | 'week' | 'month') {
     const now = new Date();
     const start = new Date(now);
@@ -174,10 +216,7 @@ export class AdminsService {
     return start;
   }
 
-  private formatNumber(
-    value: string | number | null | undefined,
-    fixed: number = 0,
-  ): string {
+  private formatNumber(value: string | number | null | undefined): string {
     try {
       const num =
         typeof value === 'string'
@@ -186,9 +225,15 @@ export class AdminsService {
 
       if (isNaN(num)) return '0';
 
-      return fixed > 0
-        ? num.toFixed(fixed)
-        : new Intl.NumberFormat('ru-RU').format(num);
+      const rounded = Math.round(num * 10) / 10;
+
+      const [integerPart, decimalPart] = rounded.toFixed(1).split('.');
+
+      const formattedInteger = new Intl.NumberFormat('ru-RU').format(
+        Number(integerPart),
+      );
+
+      return decimalPart === '0' ? formattedInteger : `${formattedInteger}`;
     } catch {
       return '0';
     }

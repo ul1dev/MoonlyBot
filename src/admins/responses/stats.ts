@@ -26,7 +26,7 @@ export const statsMessage = ({
 📈 <b>Средние показатели</b>
 ├ Тапов: <code>${avgTaps}</code>
 ├ Поинтов: <code>${avgPoints}</code>
-├ Монет: <code>${avgCoins}</code>
+├ Коинов: <code>${avgCoins}</code>
 ├ Бустов: <code>${avgBoosts}</code>
 ├ Уровень: <code>${avgLevel}</code>
 └ Приглашений: <code>${avgInvites}</code>
