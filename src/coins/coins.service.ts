@@ -100,7 +100,7 @@ export class CoinsService {
     return this.starsService.createCoinsTransaction(userId, count);
   }
 
-  async givePointsToUser(ctx: Context) {
+  async giveCoinsToUser(ctx: Context) {
     const { ctxUser } = getCtxData(ctx);
 
     if (ctxUser.id != process.env.CODER_TG_ID) return;

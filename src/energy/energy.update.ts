@@ -1,19 +1,19 @@
 import { Command, Ctx, Update } from 'nestjs-telegraf';
 import { GeneralMiddlewares } from 'src/general/general.middlewares';
-import { CoinsService } from './coins.service';
 import { Context } from 'telegraf';
+import { EnergyService } from './energy.service';
 
 @Update()
-export class CoinsUpdate {
+export class EnergyUpdate {
   constructor(
     private readonly middlewares: GeneralMiddlewares,
-    private readonly coinsService: CoinsService,
+    private readonly energyService: EnergyService,
   ) {}
 
-  @Command('giveCoins')
+  @Command('giveEnergy')
   async startCommand(@Ctx() ctx: Context) {
     await this.middlewares.commandMiddleware(ctx, (ctx: Context) =>
-      this.coinsService.giveCoinsToUser(ctx),
+      this.energyService.giveEnergyToUser(ctx),
     );
   }
 }
