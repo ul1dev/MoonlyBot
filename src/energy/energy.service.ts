@@ -43,10 +43,10 @@ export class EnergyService {
       });
     }
 
-    const energyCount = args[0];
+    const energyCount = Number(args[0]);
     const userNameOrId = formatUsername(args[1]);
 
-    if (isNaN(Number(energyCount))) {
+    if (isNaN(energyCount)) {
       return sendTempMessage({
         text: `🚫 <b>Неверное число</b>`,
         ctx,
